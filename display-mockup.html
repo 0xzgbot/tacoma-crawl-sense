@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crawl Sense — dash display mockup</title>
+<style>
+:root {
+  --ink: #f3ecdf;
+  --muted: #a89880;
+  --bg: #0e0c0a;
+  --paper: #1c1914;
+  --line: #3a3228;
+  --amber: #e7a23a;
+  --green: #7dba6a;
+  --red: #e15a3a;
+  --panel: #201c17;
+  --ground: #14110e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 "Avenir Next", "Segoe UI", sans-serif;
+}
+header, .notes, footer {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 24px 0;
+}
+h1 { font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.03em; margin: 6px 0 8px; }
+h2 { font-size: 22px; margin: 28px 0 8px; }
+.kicker { color: var(--amber); letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+p { max-width: 72ch; }
+a { color: var(--amber); }
+.stage {
+  max-width: 1080px;
+  margin: 18px auto 0;
+  padding: 0 24px;
+}
+.screen-wrap { position: relative; }
+.screen {
+  width: 1024px;
+  height: 600px;
+  background: var(--ground);
+  position: relative;
+  transform-origin: top left;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,.45);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+.panel {
+  position: absolute;
+  background: var(--panel);
+  border-radius: 16px;
+}
+.cab { left: 24px; top: 24px; width: 280px; height: 300px; }
+.truck { left: 320px; top: 24px; width: 380px; height: 420px; }
+.card { left: 720px; width: 280px; height: 108px; }
+.spark { top: 470px; width: 156px; height: 78px; border-radius: 12px; }
+.label {
+  position: absolute;
+  color: var(--muted);
+  font-size: 16px;
+  letter-spacing: 0.04em;
+}
+.big {
+  position: absolute;
+  left: 16px;
+  top: 34px;
+  font-size: 42px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+.sub { position: absolute; left: 16px; bottom: 12px; font-size: 16px; }
+.hint {
+  position: absolute;
+  left: 24px;
+  top: 560px;
+  color: var(--muted);
+  font-size: 16px;
+}
+.sky {
+  position: absolute;
+  left: 16px; top: 48px;
+  width: 248px; height: 222px;
+  background: #1c2830;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.nose {
+  position: absolute;
+  left: 0; right: 0; top: 14px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 16px;
+}
+.dims, .sheet {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 8px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+ol { max-width: 72ch; padding-left: 1.2em; }
+li { margin: 6px 0; }
+li::marker { color: var(--amber); font-weight: 700; }
+footer { color: var(--muted); font-size: 13px; padding-bottom: 40px; }
+svg.mech { width: 100%; height: auto; display: block; }
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Dash display · 1024 × 600</div>
+  <h1>What the driver sees</h1>
+  <p>This is the screen <code>crawl_sense.py</code> draws, at the real pixel layout. The sample is a squeeze: a tree 14&nbsp;inches off the front-left fender, a rock 28&nbsp;inches off the rear-left bedside, and the other two corners open. Pitch and roll are the cab, not the axles.</p>
+</header>
+<div class="stage">
+  <div class="screen-wrap" id="wrap">
+    <div class="screen" id="screen" role="img" aria-label="Crawl Sense display mockup, 1024 by 600">
+      <div class="panel cab">
+        <div class="label" style="left:18px;top:14px">CAB</div>
+        <div class="sky">
+          <svg viewBox="0 0 248 222" width="248" height="222">
+            <polygon points="0,194 248,168 248,222 0,222" fill="#5c4024"/>
+            <line x1="0" y1="194" x2="248" y2="168" stroke="#e7a23a" stroke-width="3"/>
+            <circle cx="124" cy="111" r="4" fill="#f3ecdf"/>
+          </svg>
+        </div>
+        <div class="label" style="left:18px;bottom:14px;color:#f3ecdf;font-size:22px">P +11° &nbsp; R +6°</div>
+      </div>
+
+      <div class="panel truck">
+        <div class="nose">NOSE</div>
+        <svg viewBox="0 0 380 420" width="380" height="420">
+          <g transform="translate(130,88)">
+            <rect x="-8" y="-16" width="136" height="14" rx="3" fill="#5a4e3c"/>
+            <rect x="12" y="0" width="100" height="230" rx="16" fill="#363028"/>
+            <rect x="26" y="78" width="72" height="70" rx="8" fill="#463e34"/>
+            <rect x="30" y="156" width="64" height="58" rx="3" fill="#2c2822"/>
+            <rect x="-8" y="232" width="136" height="14" rx="3" fill="#5a4e3c"/>
+            <line x1="30" y1="-6" x2="-18" y2="-54" stroke="#e15a3a" stroke-width="10" stroke-linecap="round"/>
+            <line x1="90" y1="-6" x2="138" y2="-54" stroke="#7dba6a" stroke-width="10" stroke-linecap="round"/>
+            <line x1="30" y1="236" x2="-18" y2="284" stroke="#e7a23a" stroke-width="10" stroke-linecap="round"/>
+            <line x1="90" y1="236" x2="138" y2="284" stroke="#7dba6a" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="30" cy="-6" r="9" fill="#e15a3a"/>
+            <circle cx="90" cy="-6" r="9" fill="#7dba6a"/>
+            <circle cx="30" cy="236" r="9" fill="#e7a23a"/>
+            <circle cx="90" cy="236" r="9" fill="#7dba6a"/>
+            <circle cx="30" cy="-6" r="4" fill="#14110e"/>
+            <circle cx="90" cy="-6" r="4" fill="#14110e"/>
+            <circle cx="30" cy="236" r="4" fill="#14110e"/>
+            <circle cx="90" cy="236" r="4" fill="#14110e"/>
+            <text x="30" y="-34" text-anchor="middle" fill="#f3ecdf" font-size="16" font-family="sans-serif">FL</text>
+            <text x="90" y="-34" text-anchor="middle" fill="#f3ecdf" font-size="16" font-family="sans-serif">FR</text>
+            <text x="30" y="268" text-anchor="middle" fill="#f3ecdf" font-size="16" font-family="sans-serif">RL</text>
+            <text x="90" y="268" text-anchor="middle" fill="#f3ecdf" font-size="16" font-family="sans-serif">RR</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="panel card" style="top:18px">
+        <div class="label" style="left:16px;top:12px">FL</div>
+        <div class="label" style="right:16px;top:12px;color:#e15a3a">HIT</div>
+        <div class="big">14"</div>
+        <div class="sub" style="color:#e15a3a">to the nearest panel strike</div>
+      </div>
+      <div class="panel card" style="top:134px">
+        <div class="label" style="left:16px;top:12px">FR</div>
+        <div class="label" style="right:16px;top:12px;color:#7dba6a">CLEAR</div>
+        <div class="big">62"</div>
+        <div class="sub" style="color:#7dba6a">to the nearest panel strike</div>
+      </div>
+      <div class="panel card" style="top:250px">
+        <div class="label" style="left:16px;top:12px">RL</div>
+        <div class="label" style="right:16px;top:12px;color:#e7a23a">CLOSE</div>
+        <div class="big">28"</div>
+        <div class="sub" style="color:#e7a23a">to the nearest panel strike</div>
+      </div>
+      <div class="panel card" style="top:366px">
+        <div class="label" style="left:16px;top:12px">RR</div>
+        <div class="label" style="right:16px;top:12px;color:#7dba6a">CLEAR</div>
+        <div class="big">70"</div>
+        <div class="sub" style="color:#7dba6a">to the nearest panel strike</div>
+      </div>
+
+      <div class="panel spark" style="left:24px">
+        <div class="label" style="left:8px;top:6px;font-size:14px">FL</div>
+        <svg viewBox="0 0 156 78" width="156" height="78"><polyline fill="none" stroke="#e15a3a" stroke-width="2" points="12,18 28,22 44,20 60,28 76,36 92,40 108,48 124,52 140,58"/></svg>
+      </div>
+      <div class="panel spark" style="left:192px">
+        <div class="label" style="left:8px;top:6px;font-size:14px">FR</div>
+        <svg viewBox="0 0 156 78" width="156" height="78"><polyline fill="none" stroke="#7dba6a" stroke-width="2" points="12,22 36,24 60,20 84,26 108,22 140,24"/></svg>
+      </div>
+      <div class="panel spark" style="left:360px">
+        <div class="label" style="left:8px;top:6px;font-size:14px">RL</div>
+        <svg viewBox="0 0 156 78" width="156" height="78"><polyline fill="none" stroke="#e7a23a" stroke-width="2" points="12,20 32,24 52,30 72,34 92,40 112,44 140,50"/></svg>
+      </div>
+      <div class="panel spark" style="left:528px">
+        <div class="label" style="left:8px;top:6px;font-size:14px">RR</div>
+        <svg viewBox="0 0 156 78" width="156" height="78"><polyline fill="none" stroke="#7dba6a" stroke-width="2" points="12,30 40,26 70,32 100,28 140,30"/></svg>
+      </div>
+      <div class="hint">1-4 mute &nbsp;&nbsp; under 36 in CLOSE &nbsp;&nbsp; under 18 in HIT &nbsp;&nbsp; Q quit</div>
+    </div>
+  </div>
+</div>
+
+<section class="notes">
+  <h2>The display</h2>
+  <p>Buy the <strong>Waveshare 7inch HDMI LCD (C)</strong>. It is a 7-inch IPS panel, 1024×600, which is the size the program opens. HDMI carries the picture. A micro-USB plug on the same board powers it and would carry touch, which this screen does not use. The Pi stays under the dash. This pod is only the panel.</p>
+  <p>Waveshare lists the module at <strong>164.9 × 107.0 × 8&nbsp;mm</strong> and the lit area at <strong>154.2 × 85.9&nbsp;mm</strong>. Brightness is about 300&nbsp;cd/m², so the printed pod wants a short hood or the noon sun on a Tacoma dash will wash it out. Their wiki has a dimension PDF and a STEP file. Use that STEP for the hole coordinates. The drawing below is the outline and the window, so you can start the bezel before the board arrives.</p>
+
+  <div class="dims">
+    <svg class="mech" viewBox="0 0 860 420" role="img" aria-label="Enclosure dimensions for the Waveshare 7-inch panel">
+      <rect width="860" height="420" fill="#1c1914"/>
+      <text x="28" y="32" fill="#a89880" font-size="13" font-family="ui-monospace, monospace">FRONT BEZEL · LOOKING AT THE GLASS</text>
+      <g transform="translate(70,70)">
+        <rect x="0" y="0" width="330" height="214" rx="8" fill="none" stroke="#6a5a40" stroke-width="10"/>
+        <rect x="18" y="28" width="294" height="158" rx="2" fill="#14110e" stroke="#e7a23a" stroke-width="2"/>
+        <text x="165" y="112" text-anchor="middle" fill="#f3ecdf" font-size="14" font-family="ui-sans-serif, sans-serif">window</text>
+        <text x="165" y="132" text-anchor="middle" fill="#a89880" font-size="13" font-family="ui-sans-serif, sans-serif">154.2 × 85.9 mm</text>
+        <text x="165" y="250" text-anchor="middle" fill="#a89880" font-size="13" font-family="ui-sans-serif, sans-serif">printed outside about 196 × 132 mm</text>
+      </g>
+      <g transform="translate(470,78)" font-family="ui-sans-serif, sans-serif" font-size="15" fill="#f3ecdf">
+        <text x="0" y="0" fill="#e7a23a" font-size="13" font-family="ui-monospace, monospace">PRINT THESE</text>
+        <text x="0" y="36">Module pocket</text>
+        <text x="0" y="58" fill="#a89880">165.4 × 107.5 × 12 mm, 0.5 mm clearance</text>
+        <text x="0" y="96">Glass window</text>
+        <text x="0" y="118" fill="#a89880">154.2 × 85.9 mm, the full lit area</text>
+        <text x="0" y="156">Sun hood</text>
+        <text x="0" y="178" fill="#a89880">15 mm deep, across the top, 10 mm down each side</text>
+        <text x="0" y="216">Cable slot</text>
+        <text x="0" y="238" fill="#a89880">on the edge that has HDMI and micro-USB</text>
+        <text x="0" y="276">Pod depth</text>
+        <text x="0" y="298" fill="#a89880">about 22 mm inside, plus the hood</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="sheet" style="padding:0;overflow:auto">
+    <table>
+      <thead><tr><th>Feature</th><th>Size</th><th>Where it comes from</th></tr></thead>
+      <tbody>
+        <tr><td>Panel outline</td><td class="num">164.9 × 107.0 × 8 mm</td><td>Waveshare 7inch HDMI LCD (C) specification</td></tr>
+        <tr><td>Lit area, and the bezel window</td><td class="num">154.2 × 85.9 mm</td><td>Same specification. Opening smaller than this crops the UI.</td></tr>
+        <tr><td>Pocket in the print</td><td class="num">165.4 × 107.5 × 12 mm</td><td>Outline plus 0.5 mm, and depth for the board. Confirm the HDMI shell does not stand proud of 12 mm.</td></tr>
+        <tr><td>Suggested outside of the pod</td><td class="num">196 × 132 mm</td><td>About 3 mm walls around the pocket, before the hood.</td></tr>
+        <tr><td>Mounting holes</td><td>Use the STEP</td><td>Waveshare publishes a 3D drawing. Place heat-set inserts from that file, not from a guess.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>How to print the pod</h2>
+  <ol>
+    <li>Download the STEP from the Waveshare wiki page for the 7inch HDMI LCD (C) and drop it into the model as the thing the pocket has to hold.</li>
+    <li>Cut the window to the lit area, 154.2 by 85.9 mm. A lip of the bezel can cover the dead border around that opening. It should not cover pixels.</li>
+    <li>Add the 15 mm hood on the top edge. In the truck that edge is up, so the hood blocks the windshield.</li>
+    <li>Leave a slot on the port edge for the HDMI plug and the micro-USB power plug, with a drip path so a spill on the dash does not run into the connector.</li>
+    <li>Tilt the glass about 15° toward the driver. On a 2000 Tacoma the pod sits on the dash above the radio, bolted to the radio stack or the bezel screws. Keep fasteners out of both airbag covers.</li>
+    <li>Print a test frame in draft first and sit the bare panel in it. Then print the pod. PETG or ASA handles a closed cab better than PLA.</li>
+  </ol>
+  <p>The four big numbers are the clearance at each bumper corner. Green is beyond 36 inches, amber is 18 to 36, red is under 18. The traces along the bottom are the last few seconds of that same distance, so you can see a tree closing in before the number goes red.</p>
+</section>
+<footer>
+  Panel sizes are Waveshare’s published figures for the 7inch HDMI LCD (C). Hole coordinates live in their STEP file. The picture above is the 1024×600 layout the Pi draws, shown scaled to this window.
+</footer>
+<script>
+const screen = document.getElementById("screen");
+const wrap = document.getElementById("wrap");
+function fit() {
+  const scale = Math.min(1, (wrap.parentElement.clientWidth) / 1024);
+  screen.style.transform = "scale(" + scale + ")";
+  wrap.style.height = (600 * scale) + "px";
+}
+fit();
+window.addEventListener("resize", fit);
+</script>
+</body>
+</html>

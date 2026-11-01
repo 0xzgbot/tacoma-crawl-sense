@@ -1,0 +1,15 @@
+[Unit]
+Description=Crawl Sense body-clearance display
+After=multi-user.target
+
+[Service]
+# Replace USERNAME with the account you created in Raspberry Pi Imager.
+User=USERNAME
+WorkingDirectory=/home/USERNAME/crawl-sense
+Environment=SDL_VIDEODRIVER=kmsdrm
+ExecStart=/usr/bin/python3 /home/USERNAME/crawl-sense/crawl_sense.py
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

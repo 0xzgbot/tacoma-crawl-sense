@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crawl Sense — 2000 Tacoma build manual</title>
+<style>
+:root {
+  --tabs-dur: 250ms;
+  --tabs-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --tabs-text-muted: rgba(243, 236, 223, 0.72);
+  --tabs-text-active: #1a140c;
+  --tabs-bar-bg: #2a241c;
+  --tabs-pill-bg: #e7a23a;
+  --acc-expand: 250ms;
+  --acc-collapse: 250ms;
+  --acc-chevron: 250ms;
+  --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ink: #f3ecdf;
+  --muted: #a89880;
+  --bg: #14110e;
+  --paper: #1c1914;
+  --line: #3a3228;
+  --amber: #e7a23a;
+  --green: #7dba6a;
+  --red: #e15a3a;
+  --blue: #5ca8d6;
+  --max: 1080px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 "Avenir Next", "Segoe UI", sans-serif;
+}
+header.mast {
+  padding: 36px 24px 8px;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.kicker {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 700;
+}
+h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.05;
+  margin: 8px 0 10px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+.lede { color: var(--muted); max-width: 68ch; margin: 0; }
+.tab-scroll {
+  max-width: var(--max);
+  margin: 22px auto 0;
+  padding: 0 24px 8px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: linear-gradient(var(--bg) 70%, rgba(20,17,14,0));
+  overflow-x: auto;
+}
+main { max-width: var(--max); margin: 0 auto; padding: 8px 24px 80px; }
+h2 { font-size: 28px; letter-spacing: -0.02em; margin: 8px 0 12px; }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+p { max-width: 72ch; }
+a { color: var(--amber); }
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.card, .callout, figure.plate, .sheet {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+.callout { border-color: #6a4e1e; }
+.callout strong { color: var(--amber); }
+figure.plate { margin: 16px 0; padding: 12px; }
+figure.plate figcaption {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 8px 6px 2px;
+}
+svg { width: 100%; height: auto; display: block; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.total td { font-weight: 700; color: var(--ink); }
+ol.steps { padding-left: 1.2em; max-width: 72ch; }
+ol.steps li { margin: 8px 0; }
+ol.steps li::marker { color: var(--amber); font-weight: 700; }
+code, .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.92em; }
+pre {
+  background: #100e0c;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  overflow: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 8px 0 0; }
+.swatch { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.statrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 16px 0; }
+.stat { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+.stat b { display: block; font-size: 22px; letter-spacing: -0.03em; }
+.stat span { color: var(--muted); font-size: 13px; }
+label { display: block; color: var(--muted); font-size: 13px; margin-bottom: 4px; }
+input[type="number"] {
+  width: 100%;
+  background: #100e0c;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font: inherit;
+}
+.controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+.result-line { font-size: 18px; margin: 8px 0; }
+.blank { border-bottom: 1px solid var(--muted); display: inline-block; min-width: 6em; }
+footer.colophon { color: var(--muted); font-size: 13px; max-width: var(--max); margin: 0 auto; padding: 0 24px 40px; }
+.t-acc { border-top: 1px solid var(--line); }
+.t-acc-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  color: var(--ink);
+  border: 0;
+  padding: 14px 2px;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.t-acc-chevron svg { width: 16px; height: 16px; }
+.t-acc-chevron path { fill: none; stroke: var(--amber); stroke-width: 1.5; }
+.t-acc-panel-inner { padding: 0 0 14px; }
+ul.clean { margin: 8px 0; padding-left: 1.1em; max-width: 72ch; }
+ul.clean li { margin: 4px 0; }
+
+/* Tabs sliding — verbatim from transitions.dev */
+.t-tabs {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 48px;
+  background: var(--tabs-bar-bg);
+}
+.t-tab {
+  position: relative;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  height: 30px;
+  padding: 4px 12px;
+  color: var(--tabs-text-muted);
+  cursor: pointer;
+  border-radius: 48px;
+  z-index: 1;
+  transition: color var(--tabs-dur) var(--tabs-ease);
+}
+.t-tab:not([aria-selected="true"]):hover,
+.t-tab[aria-selected="true"] {
+  color: var(--tabs-text-active);
+}
+.t-tabs-pill {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  height: 30px;
+  width: 0;
+  background: var(--tabs-pill-bg);
+  border-radius: 48px;
+  transform: translateX(0);
+  transition:
+    transform var(--tabs-dur) var(--tabs-ease),
+    width     var(--tabs-dur) var(--tabs-ease);
+  will-change: transform, width;
+  z-index: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-tabs-pill, .t-tab { transition: none !important; }
+}
+
+/* Accordion expand — verbatim from transitions.dev */
+.t-acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel {
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--acc-expand) var(--acc-ease);
+}
+.t-acc-panel-inner {
+  overflow: hidden;
+  opacity: 0;
+  filter: blur(2px);
+  transition:
+    opacity var(--acc-collapse) var(--acc-ease),
+    filter var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel-inner {
+  opacity: 1;
+  filter: blur(0);
+  transition:
+    opacity var(--acc-expand) var(--acc-ease),
+    filter var(--acc-expand) var(--acc-ease);
+}
+.t-acc-chevron {
+  display: inline-flex;
+  transform: scaleY(1);
+  transform-origin: center;
+  transition: transform var(--acc-chevron) var(--acc-ease);
+}
+.t-acc-chevron path { vector-effect: non-scaling-stroke; }
+.t-acc[data-open="true"] .t-acc-chevron {
+  transform: scaleY(-1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-acc-panel, .t-acc-panel-inner, .t-acc-chevron {
+    transition: none !important;
+  }
+}
+.panel[hidden] { display: none; }
+@media print {
+  .tab-scroll { display: none; }
+  .panel[hidden] { display: block; }
+  body { background: white; color: black; }
+  .card, .callout, figure.plate, .sheet, .stat { break-inside: avoid; }
+}
+@media (max-width: 640px) {
+  .controls { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="kicker">Build manual · body clearance</div>
+  <h1>Crawl Sense</h1>
+  <p class="lede">Four outdoor lidars on a modified 2000 Toyota Tacoma, powered from 12&nbsp;V. Each one watches a corner of the body. The cab screen shows how many inches are left before a tree or a rock meets a fender, a door, or the bedside.</p>
+</header>
+<div class="tab-scroll">
+  <div class="t-tabs" role="tablist" aria-label="Manual sections">
+    <span class="t-tabs-pill" aria-hidden="true"></span>
+    <button class="t-tab" role="tab" aria-selected="true" data-panel="overview">Overview</button>
+    <button class="t-tab" role="tab" aria-selected="false" data-panel="parts">Parts</button>
+    <button class="t-tab" role="tab" aria-selected="false" data-panel="mount">Mounting</button>
+    <button class="t-tab" role="tab" aria-selected="false" data-panel="wiring">Wiring</button>
+    <button class="t-tab" role="tab" aria-selected="false" data-panel="software">Software</button>
+    <button class="t-tab" role="tab" aria-selected="false" data-panel="build">Build</button>
+  </div>
+</div>
+<main>
+<section class="panel" id="overview" role="tabpanel">
+  <div class="statrow">
+    <div class="stat"><b>$550–950</b><span>parts, late 2026 street prices</span></div>
+    <div class="stat"><b>2 weekends</b><span>about 17 hours of work</span></div>
+    <div class="stat"><b>4 beams</b><span>one at each body corner</span></div>
+    <div class="stat"><b>12 V</b><span>key-on, fused at the battery</span></div>
+  </div>
+  <div class="callout">
+    <strong>The doors and the middle of the bedside sit between the beams.</strong> Four corner sensors cover the fender corners, the front of the doors, the rear of the cab, and the bed corners. A tree pressed against the middle of a door can sit in the gap until you yaw the lenses or add a later pair on the sliders. Keep a spotter for the first tight squeeze so you learn where that gap is on your bumpers.
+  </div>
+  <h2>What you are building</h2>
+  <p>The handheld unit in the post sweeps one lidar through a room. On this truck the sensors stay at the four corners of the custom bumpers and look outward, about level with the paint. The number on the screen is inches from that corner to the nearest tree or rock in the beam. Amber means it is inside three feet. Red means it is inside a foot and a half, which is contact range when the lens sits on the widest part of the body.</p>
+  <div class="grid grid-2">
+    <figure class="plate">
+      <svg viewBox="0 0 640 360" role="img" aria-label="Top view of a Tacoma with four corner sensors aimed at the body line">
+        <rect width="640" height="360" fill="#1c1914"/>
+        <text x="24" y="32" fill="#a89880" font-size="13" font-family="ui-monospace, monospace">TOP VIEW · BODY CORNERS</text>
+        <g transform="translate(250,40)">
+          <rect x="20" y="28" width="100" height="250" rx="18" fill="#3a342c"/>
+          <rect x="8" y="16" width="124" height="16" rx="3" fill="#6a5a40"/>
+          <rect x="8" y="278" width="124" height="16" rx="3" fill="#6a5a40"/>
+          <rect x="36" y="108" width="68" height="70" rx="8" fill="#4a4338"/>
+          <rect x="40" y="190" width="60" height="70" rx="3" fill="#2a261f"/>
+          <rect x="-8" y="70" width="18" height="46" rx="4" fill="#242018"/>
+          <rect x="130" y="70" width="18" height="46" rx="4" fill="#242018"/>
+          <rect x="-8" y="200" width="18" height="46" rx="4" fill="#242018"/>
+          <rect x="130" y="200" width="18" height="46" rx="4" fill="#242018"/>
+          <polygon points="54,22 8,-8 28,-28 54,22" fill="#e7a23a" opacity="0.5"/>
+          <polygon points="86,22 132,-8 112,-28 86,22" fill="#e7a23a" opacity="0.5"/>
+          <polygon points="54,288 8,318 28,338 54,288" fill="#5ca8d6" opacity="0.45"/>
+          <polygon points="86,288 132,318 112,338 86,288" fill="#5ca8d6" opacity="0.45"/>
+          <circle cx="54" cy="22" r="6" fill="#e7a23a"/>
+          <circle cx="86" cy="22" r="6" fill="#e7a23a"/>
+          <circle cx="54" cy="288" r="6" fill="#5ca8d6"/>
+          <circle cx="86" cy="288" r="6" fill="#5ca8d6"/>
+          <text x="70" y="150" text-anchor="middle" fill="#f3ecdf" font-size="12" font-family="ui-sans-serif, sans-serif">CAB</text>
+        </g>
+        <text x="470" y="78" fill="#e7a23a" font-size="14" font-family="ui-sans-serif, sans-serif">FL / FR</text>
+        <text x="470" y="100" fill="#a89880" font-size="13" font-family="ui-sans-serif, sans-serif">fender corner, 45° out</text>
+        <text x="470" y="250" fill="#5ca8d6" font-size="14" font-family="ui-sans-serif, sans-serif">RL / RR</text>
+        <text x="470" y="272" fill="#a89880" font-size="13" font-family="ui-sans-serif, sans-serif">bed corner, 45° out</text>
+        <text x="24" y="340" fill="#a89880" font-size="12" font-family="ui-sans-serif, sans-serif">Lenses at bumper corners, level with the paint, recessed behind the steel.</text>
+      </svg>
+      <figcaption>Xtracab outline, schematic. A regular cab uses the same four spots on a shorter truck. Custom bumpers are the thick bars.</figcaption>
+    </figure>
+    <figure class="plate">
+      <svg viewBox="0 0 640 360" role="img" aria-label="Cab screen mock with clearance colors">
+        <rect width="640" height="360" fill="#100e0c"/>
+        <rect x="16" y="16" width="200" height="200" rx="14" fill="#201c17"/>
+        <text x="32" y="42" fill="#a89880" font-size="12" font-family="ui-monospace, monospace">CAB</text>
+        <rect x="36" y="58" width="160" height="110" rx="8" fill="#1c2830"/>
+        <polygon points="36,130 196,108 196,168 36,168" fill="#5c4024"/>
+        <line x1="36" y1="130" x2="196" y2="108" stroke="#e7a23a" stroke-width="3"/>
+        <text x="32" y="196" fill="#f3ecdf" font-size="16" font-family="ui-sans-serif, sans-serif">P +11°   R +6°</text>
+        <g font-family="ui-sans-serif, sans-serif">
+          <rect x="232" y="16" width="190" height="92" rx="12" fill="#201c17"/>
+          <text x="248" y="40" fill="#a89880" font-size="12">FL</text>
+          <text x="360" y="40" fill="#e15a3a" font-size="12">HIT</text>
+          <text x="248" y="78" fill="#f3ecdf" font-size="28">14"</text>
+          <text x="248" y="98" fill="#e15a3a" font-size="12">tree at the fender</text>
+          <rect x="434" y="16" width="190" height="92" rx="12" fill="#201c17"/>
+          <text x="450" y="40" fill="#a89880" font-size="12">FR</text>
+          <text x="548" y="40" fill="#7dba6a" font-size="12">CLEAR</text>
+          <text x="450" y="78" fill="#f3ecdf" font-size="28">62"</text>
+          <text x="450" y="98" fill="#7dba6a" font-size="12">open beside the fender</text>
+          <rect x="232" y="120" width="190" height="92" rx="12" fill="#201c17"/>
+          <text x="248" y="144" fill="#a89880" font-size="12">RL</text>
+          <text x="360" y="144" fill="#e7a23a" font-size="12">CLOSE</text>
+          <text x="248" y="182" fill="#f3ecdf" font-size="28">28"</text>
+          <text x="248" y="202" fill="#e7a23a" font-size="12">rock at the bedside</text>
+          <rect x="434" y="120" width="190" height="92" rx="12" fill="#201c17"/>
+          <text x="450" y="144" fill="#a89880" font-size="12">RR</text>
+          <text x="548" y="144" fill="#7dba6a" font-size="12">CLEAR</text>
+          <text x="450" y="182" fill="#f3ecdf" font-size="28">70"</text>
+          <text x="450" y="202" fill="#7dba6a" font-size="12">open beside the bed</text>
+        </g>
+        <text x="24" y="250" fill="#a89880" font-size="13" font-family="ui-sans-serif, sans-serif">Big number is inches from that corner to the nearest strike.</text>
+        <text x="24" y="272" fill="#a89880" font-size="13" font-family="ui-sans-serif, sans-serif">Pitch and roll stay in the corner so a side-hill still reads on the cab.</text>
+      </svg>
+      <figcaption>The cab screen. Inches of air between the body and whatever is beside it.</figcaption>
+    </figure>
+  </div>
+  <div class="legend">
+    <span class="swatch"><i class="dot" style="background:#7dba6a"></i> Clear, more than 36 inches</span>
+    <span class="swatch"><i class="dot" style="background:#e7a23a"></i> Close, 18 to 36 inches</span>
+    <span class="swatch"><i class="dot" style="background:#e15a3a"></i> Hit, under 18 inches</span>
+  </div>
+  <h3>How a squeeze uses it</h3>
+  <ol class="steps">
+    <li>Watch the corner you are steering toward. FL going amber is a tree or a rock inside three feet of the front fender.</li>
+    <li>Red on that same corner means the strike is inside 18 inches. If the lens is on the widest paint, that is body contact.</li>
+    <li>A rock or a trunk beside the bed lights RL or RR the same way while you pivot or back.</li>
+    <li>Pitch and roll stay on the screen so a side-hill is visible without leaving the clearance numbers.</li>
+  </ol>
+  <h3>Why these sensors, on a bumper, in the sun</h3>
+  <p>A parking ultrasonic smears a tree trunk into a blob and often cannot see inside a foot. A pencil lidar misses a trunk a few inches off the beam. This build uses a wide-axis outdoor lidar, about 10° or more, with the wide axis horizontal so one beam covers the fender corner and the start of the door. Minimum range around 4 inches (10&nbsp;cm), UART at 3.3&nbsp;V, and a face you can hose off. The Benewake TF-Nova class is the current match. Confirm the datasheet in the box for field of view, minimum range, baud, and IP rating before you drill brackets. A TFmini-style 3° sensor leaves a gap a sapling can slip through.</p>
+  <p>Aim is about 45° out from the bumper and about 5° down, level with the paint. The beam is looking for the thing that will touch the panel, so it stays off the dirt.</p>
+</section>
+
+<section class="panel" id="parts" role="tabpanel" hidden>
+  <h2>Parts and cost</h2>
+  <p>Prices are typical US hobby prices in late 2026, before tax and shipping. The lidar and the screen brightness are most of the swing. If a TF-Nova is out of stock, buy the part that meets the rule in the table note, and keep the wide axis horizontal so it covers the fender and the door. The cab screen, drawn at the real 1024×600 size, is in <a href="display-mockup.html">display-mockup.html</a>, with the enclosure dimensions for the dash pod.</p>
+  <div class="card" style="padding:0; overflow:auto">
+    <table>
+      <thead>
+        <tr><th>Part</th><th>Qty</th><th class="num">Low</th><th class="num">High</th><th>Why this one</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Raspberry Pi 4, 2&nbsp;GB</td><td>1</td><td class="num">$45</td><td class="num">$55</td><td>Runs the screen. A Pi 5 works if the 5&nbsp;V supply is honestly 5&nbsp;A.</td></tr>
+        <tr><td>32&nbsp;GB A1 microSD</td><td>1</td><td class="num">$8</td><td class="num">$12</td><td>Boot card.</td></tr>
+        <tr><td>Waveshare 7inch HDMI LCD (C), 1024×600</td><td>1</td><td class="num">$55</td><td class="num">$90</td><td>The panel the screen layout is drawn for. 164.9 × 107 × 8&nbsp;mm. It is about 300&nbsp;nit, so the printed dash pod needs a short sun hood.</td></tr>
+        <tr><td>Short HDMI cable</td><td>1</td><td class="num">$6</td><td class="num">$12</td><td>Keep it under 2&nbsp;ft so it stays behind the dash.</td></tr>
+        <tr><td>Pi UPS HAT with power-loss shutdown</td><td>1</td><td class="num">$28</td><td class="num">$45</td><td>Key-off has to shut the Pi down cleanly or the card will corrupt.</td></tr>
+        <tr><td>Wide-FOV outdoor lidar, TF-Nova class</td><td>4</td><td class="num">$160</td><td class="num">$280</td><td>UART, 3.3&nbsp;V logic, ≤20&nbsp;cm minimum, wide axis ≥10° and mounted horizontal, outdoor rated.</td></tr>
+        <tr><td>MPU6050 breakout</td><td>1</td><td class="num">$4</td><td class="num">$8</td><td>Pitch and roll. Bolt it to the cab, level when the truck is level.</td></tr>
+        <tr><td>12&nbsp;V to 5&nbsp;V buck, 5&nbsp;A, adjustable</td><td>1</td><td class="num">$22</td><td class="num">$40</td><td>Pololu D24V50F5 class. Set 5.1&nbsp;V at the Pi under load. Skip LM2596 modules.</td></tr>
+        <tr><td>12&nbsp;V to 5&nbsp;V buck, 2&nbsp;A, for bumper pods</td><td>2</td><td class="num">$16</td><td class="num">$28</td><td>One in each bumper. Sensors must be powered at the bumper, over a long 5&nbsp;V run they sag.</td></tr>
+        <tr><td>Automotive relay and socket, with diode</td><td>1</td><td class="num">$10</td><td class="num">$16</td><td>Key-on switch for the whole system. A 20–40&nbsp;A relay is fine; the load is a few amps.</td></tr>
+        <tr><td>Add-a-circuit fuse tap, mini or low-profile to match the truck</td><td>1</td><td class="num">$7</td><td class="num">$12</td><td>Coil power only, from an ignition fuse. 2000 Tacoma interior fuses are the small blade type in the driver dash.</td></tr>
+        <tr><td>Inline ATO holder, 5&nbsp;A, plus two 2&nbsp;A and one 3&nbsp;A</td><td>1</td><td class="num">$12</td><td class="num">$20</td><td>5&nbsp;A at the battery. Branch fuses in the cab.</td></tr>
+        <tr><td>16&nbsp;AWG duplex primary wire, 50&nbsp;ft</td><td>1</td><td class="num">$28</td><td class="num">$45</td><td>12&nbsp;V and ground to both bumpers.</td></tr>
+        <tr><td>Shielded 3-conductor 22&nbsp;AWG, 75&nbsp;ft</td><td>1</td><td class="num">$35</td><td class="num">$60</td><td>TX, RX, signal ground. One run per bumper, two sensors each.</td></tr>
+        <tr><td>6-pin waterproof connector pair</td><td>2</td><td class="num">$20</td><td class="num">$32</td><td>SP13 or GX16 is easy to buy. Deutsch DT is the tougher upgrade.</td></tr>
+        <tr><td>USB-UART dongle, CP2102 or FTDI, 3.3&nbsp;V capable</td><td>4</td><td class="num">$16</td><td class="num">$32</td><td>One per sensor, living in the cab. Jumper each one to 3.3&nbsp;V.</td></tr>
+        <tr><td>IP67 box, about 4×3×2 in</td><td>2</td><td class="num">$20</td><td class="num">$32</td><td>Buck and splices live here, up inside the bumper, off the leading edge.</td></tr>
+        <tr><td>Cable glands, PG7</td><td>8</td><td class="num">$8</td><td class="num">$16</td><td>Two sensors, one power, one signal, per pod.</td></tr>
+        <tr><td>Passive piezo and 2N2222</td><td>1</td><td class="num">$4</td><td class="num">$8</td><td>Optional beep. The screen color is the alert either way.</td></tr>
+        <tr><td>Dash mount that bolts to the radio stack</td><td>1</td><td class="num">$18</td><td class="num">$40</td><td>Keep screws out of the airbag covers.</td></tr>
+        <tr><td>Loom, zip ties, heat shrink, rings, dielectric grease, Loctite 243</td><td>1</td><td class="num">$20</td><td class="num">$35</td><td>The trail consumes the cheap version of each of these.</td></tr>
+        <tr><td>1/8 in steel or 3/16 in aluminum for four tabs</td><td>1</td><td class="num">$0</td><td class="num">$25</td><td>You are making the mounts. Scrap is fine.</td></tr>
+        <tr class="total"><td>Total</td><td></td><td class="num">$542</td><td class="num">$943</td><td>About $550–$950.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Hardware you already need in the shop</h3>
+  <ul class="clean">
+    <li>Multimeter, and the habit of checking you are on volts before the probes go in.</li>
+    <li>Crimpers for insulated terminals, a stripper, a heat gun.</li>
+    <li>Drill, step bit, 1/4-20 tap if you thread the bumper instead of using nuts.</li>
+    <li>Eight 1/4-20 × 3/4 in stainless bolts, eight nylock nuts, four 1/4-20 × 1/2 in pivot bolts, fender washers.</li>
+    <li>A phone with an inclinometer, or a digital angle gauge.</li>
+    <li>A laptop to write the SD card.</li>
+    <li>Trim tools for the driver dash and the radio bezel.</li>
+  </ul>
+  <h3>Leave these on the shelf</h3>
+  <ul class="clean">
+    <li>HC-SR04 and JSN-SR04T ultrasonics. Fine for a garage wall, weak on angled rock, and their close range is poor.</li>
+    <li>Any lidar whose wide axis is only a few degrees. A sapling a hand’s width off the beam center will never light the screen.</li>
+    <li>A 5&nbsp;V logic USB-UART with no 3.3&nbsp;V jumper. Its TX pin will overvolt the sensor.</li>
+    <li>An always-hot feed to the Pi with no shutdown. The card dies on the third trailhead.</li>
+  </ul>
+</section>
+
+<section class="panel" id="mount" role="tabpanel" hidden>
+  <h2>Mounting on your Tacoma</h2>
+  <p>Toyota’s 2000 brochure lists the stock 4×4 as 66.5&nbsp;in wide, 10.8&nbsp;in of clearance (12.0&nbsp;in on the taller tire), approach about 32°, and departure about 24°. Regular-cab wheelbase is 103.3&nbsp;in and length with the rear bumper is 183.8&nbsp;in. Xtracab wheelbase is 121.9&nbsp;in and length is 202.3&nbsp;in. There was no factory double cab in 2000. Your lift, tires, and bumpers replace every one of those numbers for aiming. Measure the truck in front of you.</p>
+  <figure class="plate">
+    <svg viewBox="0 0 880 420" role="img" aria-label="Side and top placement on a first-generation Tacoma">
+      <rect width="880" height="420" fill="#1c1914"/>
+      <text x="24" y="28" fill="#a89880" font-size="13" font-family="ui-monospace, monospace">SIDE · LENS AT FENDER HEIGHT</text>
+      <g transform="translate(40,50)">
+        <path d="M40 150 H120 L170 110 H250 L270 70 H340 L360 110 H430 L450 150 H520" fill="#3a342c" stroke="#6a5a40" stroke-width="2"/>
+        <circle cx="150" cy="160" r="28" fill="none" stroke="#242018" stroke-width="10"/>
+        <circle cx="430" cy="160" r="28" fill="none" stroke="#242018" stroke-width="10"/>
+        <line x1="20" y1="188" x2="560" y2="188" stroke="#6a5a40" stroke-width="2"/>
+        <rect x="48" y="108" width="36" height="22" rx="2" fill="#6a5a40"/>
+        <circle cx="78" cy="118" r="5" fill="#e7a23a"/>
+        <line x1="78" y1="118" x2="200" y2="128" stroke="#e7a23a" stroke-width="3"/>
+        <rect x="190" y="100" width="16" height="56" fill="#3d6b32"/>
+        <text x="70" y="210" fill="#a89880" font-size="12" font-family="ui-sans-serif, sans-serif">lens at the fender lip</text>
+        <text x="160" y="92" fill="#7dba6a" font-size="12" font-family="ui-sans-serif, sans-serif">tree trunk</text>
+        <text x="300" y="40" fill="#f3ecdf" font-size="13" font-family="ui-sans-serif, sans-serif">beam stays with the paint, not the dirt</text>
+      </g>
+      <text x="24" y="300" fill="#a89880" font-size="13" font-family="ui-monospace, monospace">FRONT BUMPER, LOOKING DOWN · 45° OUT</text>
+      <g transform="translate(40,318)">
+        <rect x="40" y="24" width="440" height="22" rx="4" fill="#6a5a40"/>
+        <circle cx="70" cy="24" r="7" fill="#e7a23a"/>
+        <circle cx="450" cy="24" r="7" fill="#e7a23a"/>
+        <line x1="70" y1="24" x2="20" y2="-8" stroke="#e7a23a" stroke-width="3"/>
+        <line x1="450" y1="24" x2="500" y2="-8" stroke="#e7a23a" stroke-width="3"/>
+        <text x="80" y="68" fill="#e7a23a" font-size="12" font-family="ui-sans-serif, sans-serif">FL at the bumper corner</text>
+        <text x="300" y="68" fill="#e7a23a" font-size="12" font-family="ui-sans-serif, sans-serif">FR at the bumper corner</text>
+        <text x="180" y="16" fill="#a89880" font-size="12" font-family="ui-sans-serif, sans-serif">winch fairlead stays clear</text>
+      </g>
+    </svg>
+    <figcaption>The lens sits at the bumper corner, at the height of the fender or bedside, 3/4&nbsp;in behind the steel that hits first. Aim 45° out and about 5° down. Repeat on the rear bumper, aimed back and out. An eyebrow of 1/8&nbsp;in steel above the lens takes the scrape.</figcaption>
+  </figure>
+  <h3>Where each piece goes</h3>
+  <ol class="steps">
+    <li>Stand at each corner and find the paint that sticks out farthest: fender flare, bedside, or the bumper itself. The lens goes at that corner, at that height. If the flare is wider than the bumper, put the tab out to the flare or write down how many inches the lens sits inboard of the paint.</li>
+    <li>Keep the lens 3/4&nbsp;in behind the outermost steel. A tree should meet the bumper before the glass.</li>
+    <li>Weld or bolt the tab on the corner, yawed about 45° out from straight ahead on the front and 45° out from straight back on the rear. Leave the fairlead and the winch line alone.</li>
+    <li>Put the waterproof box high inside the bumper, above the usual waterline of a puddle. Sensor pigtails stay short, about a foot. The long cable leaves the box, with a drip loop, and runs along the frame.</li>
+    <li>Front cable: driver-side frame rail, clear of the steering shaft, the exhaust, and any winch lead. Up the firewall through an unused rubber plug, high and clear of the brake booster. Gland it. Seal with butyl. Drip loop on the engine side so water does not run into the cab.</li>
+    <li>Rear cable: inside the driver frame rail, zip-tied to existing holes. Do not tie it to the brake line or the fuel line. Come into the cab through an unused floor or cab-wall plug behind the seat, again with a drip loop, then forward under the sill trim to the dash.</li>
+    <li>Screen: bolt a bracket to the radio stack or the existing radio-bezel screws, angled at the driver. The 2000 has a driver airbag and a passenger airbag. Keep fasteners out of both covers and out of the column shroud. A 7&nbsp;inch panel will not fit in the cluster. Above the radio, tilted, is the spot that leaves the speedometer readable.</li>
+    <li>Pi and the four USB-UART dongles: low in the dash, where cab air can reach them, away from the heater duct and the windshield sun. The IMU screws to a horizontal piece of cab sheet metal, connector pointing so you can still unplug it, chip parallel to the floor when the truck is on flat concrete.</li>
+  </ol>
+  <h3>Bracket</h3>
+  <figure class="plate">
+    <svg viewBox="0 0 760 280" role="img" aria-label="Sensor tab dimensions">
+      <rect width="760" height="280" fill="#1c1914"/>
+      <g transform="translate(40,30)" fill="none" stroke="#f3ecdf" stroke-width="2">
+        <rect x="0" y="20" width="90" height="160" rx="4"/>
+        <circle cx="28" cy="50" r="6"/>
+        <circle cx="62" cy="50" r="6"/>
+        <circle cx="45" cy="120" r="7"/>
+        <path d="M45 120 m -28 18 a 34 34 0 0 0 56 0" />
+        <rect x="120" y="78" width="70" height="36" rx="8" stroke="#e7a23a"/>
+        <line x1="52" y1="120" x2="120" y2="96"/>
+      </g>
+      <g font-family="ui-sans-serif, sans-serif" font-size="14" fill="#a89880">
+        <text x="40" y="24">2.0 in wide × 2.5 in tall × 1/8 in steel</text>
+        <text x="250" y="70">Two 1/4-20 holes, 1.5 in apart, into the bumper</text>
+        <text x="250" y="100">Pivot: 1/4-20, Loctite once the angle is set</text>
+        <text x="250" y="130">Curved slot, about ±12°, so you can trim the aim</text>
+        <text x="250" y="160">Sensor in a saddle with a strip of inner tube under it</text>
+        <text x="250" y="190">Size the saddle to the body diameter you measure</text>
+        <text x="250" y="230">Eyebrow: 1/8 in × 1/2 in above the lens, sticking out 0.4 in</text>
+      </g>
+    </svg>
+    <figcaption>Four of these. Stainless hardware. Nylocks on the bumper bolts. The pivot gets Loctite 243 after the parking-lot aim check, so it survives washboard and still comes apart later.</figcaption>
+  </figure>
+  <h3>Aim calculator</h3>
+  <p>Start at 45° out and 5° down. The picture is the front-left corner, looking down on the bumper. Forward is up. The dot is where a strike 36&nbsp;inches along the beam would sit.</p>
+  <div class="card">
+    <div class="controls">
+      <div>
+        <label for="yawDeg">Yaw outward from straight ahead (degrees)</label>
+        <input id="yawDeg" type="number" min="0" max="90" step="1" value="45">
+      </div>
+      <div>
+        <label for="pitchDeg">Pitch below horizontal (degrees)</label>
+        <input id="pitchDeg" type="number" min="0" max="30" step="1" value="5">
+      </div>
+      <div>
+        <label for="lookIn">Distance along the beam (inches)</label>
+        <input id="lookIn" type="number" min="12" max="120" step="1" value="36">
+      </div>
+    </div>
+    <svg id="aimFig" viewBox="0 0 640 240" role="img" aria-label="Live corner-aim diagram">
+      <rect width="640" height="240" fill="#14110e"/>
+      <rect x="40" y="150" width="220" height="28" fill="#6a5a40"/>
+      <rect x="70" y="40" width="70" height="110" fill="#3a342c"/>
+      <circle id="lens" cx="250" cy="150" r="6" fill="#e7a23a"/>
+      <line id="beam" x1="250" y1="150" x2="360" y2="70" stroke="#e7a23a" stroke-width="3"/>
+      <circle id="hit" cx="360" cy="70" r="5" fill="#e15a3a"/>
+      <text id="aimLabel" x="40" y="28" fill="#f3ecdf" font-size="16" font-family="ui-sans-serif, sans-serif">—</text>
+    </svg>
+    <p class="result-line" id="aimText"></p>
+    <p id="aimAdvice" style="color:var(--muted)"></p>
+  </div>
+  <h3>Measure sheet</h3>
+  <p>Fill this in on the truck before you order cable. Print the page if you want it on a clipboard.</p>
+  <div class="sheet">
+    <table>
+      <thead><tr><th>Mark</th><th>What</th><th>Yours</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>Lens height, matched to the fender lip or bedside</td><td class="blank"></td></tr>
+        <tr><td>B</td><td>Setback behind the outermost steel (start at 0.75 in)</td><td class="blank"></td></tr>
+        <tr><td>C</td><td>Yaw outward after the walk-around (start at 45°)</td><td class="blank"></td></tr>
+        <tr><td>D</td><td>Pitch down after the walk-around (start at 5°)</td><td class="blank"></td></tr>
+        <tr><td>E</td><td>How far the lens sits inboard of the widest paint</td><td class="blank"></td></tr>
+        <tr><td>F</td><td>Cable length, each pod to the dash, plus 3 ft of service loop</td><td class="blank"></td></tr>
+        <tr><td>G</td><td>Wheelbase, so you know which cab you are dressing the harness for</td><td class="blank"></td></tr>
+        <tr><td>H</td><td>Sensor body diameter, for the saddle</td><td class="blank"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Setting the angle on the truck</h3>
+  <ol class="steps">
+    <li>Park on flat concrete. Leave the transmission in park or in gear, parking brake on, chock a tire.</li>
+    <li>Stick the phone on top of the sensor. With 0° meaning level, tip the lens down until the phone reads about 5°.</li>
+    <li>Sight down the lens, or set a speed square on the bumper face. The beam leaves the corner about 45° out from the centerline of the truck.</li>
+    <li>Have someone walk a sheet of cardboard along the fender, then along the front of the door, then out from the corner the way a trunk would stand. That corner’s number should fall. The opposite corner should stay long.</li>
+    <li>If the door never moves the number, yaw the lens farther out. If a sheet straight off the corner never moves it, yaw the lens back toward straight ahead. Loctite the pivot after all four corners pass.</li>
+  </ol>
+</section>
+
+<section class="panel" id="wiring" role="tabpanel" hidden>
+  <h2>Wiring on 12&nbsp;V</h2>
+  <p>The lidars and the screen track the key. The Pi is on the same switched 12&nbsp;V, through a UPS HAT that sees the input fall and finishes a shutdown. Follow the HAT manual for its two sense wires. The rest of this section is the truck side, which is the same no matter which HAT you buy.</p>
+  <figure class="plate">
+    <svg viewBox="0 0 880 460" role="img" aria-label="Power and signal diagram">
+      <rect width="880" height="460" fill="#1c1914"/>
+      <g font-family="ui-sans-serif, sans-serif" font-size="13" fill="#f3ecdf">
+        <rect x="24" y="40" width="110" height="54" rx="8" fill="#2a241c" stroke="#e7a23a"/>
+        <text x="79" y="72" text-anchor="middle">Battery</text>
+        <rect x="170" y="40" width="90" height="54" rx="8" fill="#2a241c" stroke="#e15a3a"/>
+        <text x="215" y="72" text-anchor="middle">5 A fuse</text>
+        <rect x="300" y="30" width="120" height="74" rx="8" fill="#2a241c" stroke="#f3ecdf"/>
+        <text x="360" y="58" text-anchor="middle">Relay</text>
+        <text x="360" y="78" text-anchor="middle" fill="#a89880">30 → 87</text>
+        <rect x="460" y="40" width="130" height="54" rx="8" fill="#2a241c" stroke="#f3ecdf"/>
+        <text x="525" y="72" text-anchor="middle">Cab fuse stud</text>
+        <rect x="640" y="24" width="210" height="36" rx="8" fill="#2a241c" stroke="#5ca8d6"/>
+        <text x="745" y="47" text-anchor="middle">2 A → front pod</text>
+        <rect x="640" y="70" width="210" height="36" rx="8" fill="#2a241c" stroke="#5ca8d6"/>
+        <text x="745" y="93" text-anchor="middle">2 A → rear pod</text>
+        <rect x="640" y="116" width="210" height="36" rx="8" fill="#2a241c" stroke="#7dba6a"/>
+        <text x="745" y="139" text-anchor="middle">3 A → 5 V 5 A buck → Pi</text>
+        <rect x="24" y="160" width="250" height="70" rx="8" fill="#2a241c" stroke="#e7a23a"/>
+        <text x="149" y="190" text-anchor="middle">Ignition fuse, driver dash</text>
+        <text x="149" y="210" text-anchor="middle" fill="#a89880">add-a-circuit, 1 A, coil only</text>
+        <rect x="40" y="280" width="250" height="140" rx="10" fill="#242018" stroke="#6a5a40"/>
+        <text x="165" y="308" text-anchor="middle">Front pod</text>
+        <text x="165" y="332" text-anchor="middle" fill="#a89880">12 V → 5 V buck</text>
+        <text x="165" y="354" text-anchor="middle" fill="#a89880">FL and FR lidars</text>
+        <text x="165" y="376" text-anchor="middle" fill="#a89880">TX / RX / GND out</text>
+        <rect x="320" y="280" width="250" height="140" rx="10" fill="#242018" stroke="#6a5a40"/>
+        <text x="445" y="308" text-anchor="middle">Rear pod</text>
+        <text x="445" y="332" text-anchor="middle" fill="#a89880">12 V → 5 V buck</text>
+        <text x="445" y="354" text-anchor="middle" fill="#a89880">RL and RR lidars</text>
+        <text x="445" y="376" text-anchor="middle" fill="#a89880">TX / RX / GND out</text>
+        <rect x="600" y="280" width="250" height="140" rx="10" fill="#242018" stroke="#7dba6a"/>
+        <text x="725" y="308" text-anchor="middle">Dash</text>
+        <text x="725" y="332" text-anchor="middle" fill="#a89880">4× USB-UART at 3.3 V</text>
+        <text x="725" y="354" text-anchor="middle" fill="#a89880">Pi, HAT, IMU, screen</text>
+        <text x="725" y="376" text-anchor="middle" fill="#a89880">signal ground lands here</text>
+      </g>
+      <path d="M134 67 H170 M260 67 H300 M420 67 H460 M590 67 H640" stroke="#e7a23a" stroke-width="2" fill="none"/>
+      <path d="M149 230 V260 H165 V280" stroke="#e7a23a" stroke-width="2" fill="none"/>
+    </svg>
+    <figcaption>Switched 12&nbsp;V trunk, local 5&nbsp;V at each bumper, UART only on the long run back to the cab.</figcaption>
+  </figure>
+  <h3>Relay pins</h3>
+  <p>Use a socketed ISO mini relay with the diode already in the socket, and match the socket’s + mark to the ignition side of the coil.</p>
+  <div class="card" style="padding:0">
+    <table>
+      <thead><tr><th>Pin</th><th>Lands on</th></tr></thead>
+      <tbody>
+        <tr><td>30</td><td>Battery, after the 5&nbsp;A fuse that sits within 12&nbsp;inches of the positive post</td></tr>
+        <tr><td>87</td><td>Cab distribution stud</td></tr>
+        <tr><td>86</td><td>Add-a-circuit on an ignition fuse, through that tap’s 1&nbsp;A fuse</td></tr>
+        <tr><td>85</td><td>Clean ground</td></tr>
+        <tr><td>87a</td><td>Leave empty</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>What to tap on this truck</h3>
+  <p>The interior fuse panel is on the driver’s side of the dash. Pull a fuse that is dead with the key out and live with the key in ON. Radio, cigar lighter, or an ignition-marked cavity is the usual coil source. Put the original fuse back in the add-a-circuit’s lower slot and a 1&nbsp;A fuse in the new slot. Some taps are polarized: if the new slot is dead and the original circuit died too, flip the tap. Leave the airbag, ABS, ECU, and fuel-pump fuses alone. The 5&nbsp;A main fuse is a new holder at the battery. It does not replace anything in Toyota’s boxes.</p>
+  <h3>Ground</h3>
+  <p>One cab ground stud, scraped to metal, star washer, dielectric grease over the joint after it is tight. The buck ground, the Pi supply ground, the USB-UART grounds, and the IMU ground all land there. Bumper grounds return on the black power wire to that same stud. Tie the signal-cable shield to ground at the cab end only.</p>
+  <h3>Connector at each pod</h3>
+  <div class="card" style="padding:0">
+    <table>
+      <thead><tr><th>Pin</th><th>Front pod</th><th>Rear pod</th><th>Color you assign</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Switched 12&nbsp;V</td><td>Switched 12&nbsp;V</td><td>Red</td></tr>
+        <tr><td>2</td><td>Ground</td><td>Ground</td><td>Black</td></tr>
+        <tr><td>3</td><td>FL TX, data out of the sensor</td><td>RL TX</td><td>Yellow</td></tr>
+        <tr><td>4</td><td>FL RX, data into the sensor</td><td>RL RX</td><td>Green</td></tr>
+        <tr><td>5</td><td>FR TX</td><td>RR TX</td><td>White</td></tr>
+        <tr><td>6</td><td>FR RX</td><td>RR RX</td><td>Blue</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Write the colors on the pod lid. Sensor pigtail colors from the factory vary by batch. The sheet in the box wins. A common Benewake lead is red +5&nbsp;V, black ground, green TX, white RX. Prove TX before you believe the color: with only power and ground connected, the streaming wire is TX.</p>
+  <h3>USB-UART</h3>
+  <ol class="steps">
+    <li>Move the dongle’s VCC jumper to 3.3&nbsp;V before it touches a sensor wire.</li>
+    <li>Dongle RX goes to sensor TX. Dongle TX goes to sensor RX. Dongle ground goes to the black wire.</li>
+    <li>Leave the dongle’s 5&nbsp;V and 3.3&nbsp;V pins empty. The sensor’s 5&nbsp;V comes from the pod buck. Back-powering a lidar from a USB dongle over 15&nbsp;feet of 22&nbsp;AWG is how you get nonsense ranges.</li>
+    <li>Tape FL, FR, RL, RR on the dongles before they go into the Pi. Port order on the Pi will still move; the software section uses stable names.</li>
+  </ol>
+  <h3>Noise from the rest of the bumper</h3>
+  <p>A winch lead and a light-bar lead belong on the opposite side of the bumper from the signal cable. Where they have to cross, cross at a right angle and keep going. Do not spiral the UART cable around winch cable.</p>
+  <div class="t-acc" data-open="false">
+    <button class="t-acc-head" aria-expanded="false">Meter checks before the Pi is connected
+      <span class="t-acc-chevron"><svg viewBox="0 0 16 16"><path d="M4 6.5L8 10.5L12 6.5"/></svg></span>
+    </button>
+    <div class="t-acc-panel"><div class="t-acc-panel-inner">
+      <div class="card" style="padding:0">
+        <table>
+          <thead><tr><th>Point</th><th>Key off</th><th>Key on, engine off</th></tr></thead>
+          <tbody>
+            <tr><td>Both sides of the 5&nbsp;A fuse</td><td>About 12.6&nbsp;V</td><td>About 12.6&nbsp;V</td></tr>
+            <tr><td>Relay pin 87</td><td>0&nbsp;V</td><td>About 12.6&nbsp;V</td></tr>
+            <tr><td>Each pod buck input</td><td>0&nbsp;V</td><td>About 12&nbsp;V, a little less is fine</td></tr>
+            <tr><td>Each lidar red to black</td><td>0&nbsp;V</td><td>5.0 to 5.2&nbsp;V</td></tr>
+            <tr><td>Pi buck, measured at the HAT input with the Pi running</td><td>0&nbsp;V after shutdown</td><td>5.1&nbsp;V</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Set the pod bucks with a meter before the lidar plugs in. A module that wakes up at 12&nbsp;V on the “5&nbsp;V” screw will kill four sensors in one key cycle. Confirm the relay drops out with the key. Then connect one lidar, watch its current if you can, and only then connect the other three.</p>
+    </div></div>
+  </div>
+</section>
+
+<section class="panel" id="software" role="tabpanel" hidden>
+  <h2>Software</h2>
+  <p>The display program is <code>crawl_sense.py</code> in this same folder, next to <code>config.json</code> and <code>crawl-sense.service</code>. Copy those three onto the Pi. The Pi runs Raspberry Pi OS Lite, 64-bit, and draws straight to the screen.</p>
+  <h3>What you install</h3>
+  <ul class="clean">
+    <li>Raspberry Pi Imager on your laptop, to write the card.</li>
+    <li>Raspberry Pi OS Lite (64-bit, Bookworm).</li>
+    <li>On the Pi: <code>python3-pygame</code>, <code>python3-serial</code>, <code>python3-smbus2</code>. All three are apt packages. No extra package index.</li>
+    <li>I2C turned on for the MPU6050. Serial USB needs no overlay; the dongles show up as their own devices.</li>
+  </ul>
+  <h3>Image the card</h3>
+  <ol class="steps">
+    <li>In Raspberry Pi Imager, choose Lite 64-bit, set a username, and set a Wi-Fi network you have at the bench. The truck does not need Wi-Fi afterward.</li>
+    <li>Boot once on the bench with a keyboard. Run <code>sudo raspi-config</code>. Turn on I2C. Set boot to console autologin.</li>
+    <li>Install the libraries and put your user in the groups that can see the screen, the USB serial ports, and I2C:</li>
+  </ol>
+  <pre>sudo apt update
+sudo apt install -y python3-pygame python3-serial python3-smbus2
+sudo usermod -aG video,dialout,i2c "$USER"</pre>
+  <p>Log out and back in so the groups apply.</p>
+  <h3>Name the four ports so they survive a reboot</h3>
+  <p>Plug in one dongle at a time and read the stable name.</p>
+  <pre>ls -l /dev/serial/by-id/</pre>
+  <p>Put those paths in <code>config.json</code>. An empty string means that corner draws “no link,” which is what you want while a cable is still on the bench.</p>
+  <pre>{
+  "baud": 115200,
+  "ports": {
+    "FL": "/dev/serial/by-id/usb-your-fl-dongle",
+    "FR": "/dev/serial/by-id/usb-your-fr-dongle",
+    "RL": "/dev/serial/by-id/usb-your-rl-dongle",
+    "RR": "/dev/serial/by-id/usb-your-rr-dongle"
+  }
+}</pre>
+  <p>Confirm baud against the sheet in the lidar box. Benewake’s usual frame is 9 bytes at 115200: two <code>0x59</code> headers, distance in centimeters as a little-endian pair, signal strength as another pair, two more bytes, then a checksum that is the low byte of the sum of the first eight. The program drops any frame whose strength is under 100, so a muddy lens goes to dashes instead of a fake tree.</p>
+  <h3>How a reading becomes a color</h3>
+  <p>The number is inches from that corner’s lens to the nearest return. Mount the lens on the widest paint and the number is clearance to the panel. There is no baseline to set.</p>
+  <ul class="clean">
+    <li>More than 36&nbsp;inches: green CLEAR.</li>
+    <li>18 to 36&nbsp;inches: amber CLOSE.</li>
+    <li>Under 18&nbsp;inches: red HIT.</li>
+    <li>A stale reading older than 0.6&nbsp;seconds draws dashes.</li>
+  </ul>
+  <p>Keys on the keyboard you leave in the glove box, or a small USB pad: <code>1</code> through <code>4</code> mute FL FR RL RR, <code>Q</code> quit. For a window on the bench instead of fullscreen, run it as <code>CRAWL_WINDOW=1 python3 crawl_sense.py</code>.</p>
+  <h3>Prove one sensor before you mount four</h3>
+  <pre>python3 - &lt;&lt;'PY'
+import serial
+s = serial.Serial("/dev/ttyUSB0", 115200, timeout=0.2)
+buf = bytearray()
+while True:
+    buf.extend(s.read(64))
+    i = buf.find(b"\x59\x59")
+    if i &gt;= 0 and len(buf) &gt;= i + 9:
+        f = buf[i:i+9]
+        if (sum(f[:8]) &amp; 255) == f[8]:
+            cm = f[2] | (f[3] &lt;&lt; 8)
+            print(cm, "cm", round(cm / 2.54, 1), "in")
+        del buf[:i+9]
+PY</pre>
+  <p>Wave a hand through the beam. The inches should fall. If the printout is garbage, swap TX and RX once. If it is silent, the dongle is still on 5&nbsp;V, the baud is wrong, or the sensor has no 5&nbsp;V from the pod.</p>
+  <h3>IMU</h3>
+  <p>MPU6050 VCC to Pi pin 1 (3.3&nbsp;V), GND to pin 6, SDA to pin 3, SCL to pin 5. The program wakes the chip and smooths pitch and roll. On a crawling axle the raw accelerometer is noisy; the smoothing is there so the horizon does not flicker. The ranges remain the thing you drive from. If the chip is missing, the screen says so and the ranges still run.</p>
+  <h3>Start with the truck</h3>
+  <p>Edit <code>crawl-sense.service</code> and replace <code>USERNAME</code> with the account from Imager. Then:</p>
+  <pre>mkdir -p ~/crawl-sense
+# copy crawl_sense.py, config.json into that folder
+sudo cp crawl-sense.service /etc/systemd/system/crawl-sense.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now crawl-sense.service</pre>
+  <p>The service uses the KMS video driver so there is no desktop to crash. If the screen stays black, the panel’s manual will have a resolution line for the Pi’s video config. Use that line. A 1024×600 panel is what the layout in the program expects.</p>
+  <p>The constants <code>CLOSE_IN</code>, <code>HIT_IN</code>, and <code>MIN_STRENGTH</code> are at the top of <code>crawl_sense.py</code>. After a dusty weekend, if a clean lens still drops out, lower the strength gate before you change the colors. If a flare or the bedside sticks out past the lens, put that distance in inches under <code>inset_in</code> for that corner in <code>config.json</code>. The screen then shows clearance to the paint.</p>
+</section>
+
+<section class="panel" id="build" role="tabpanel" hidden>
+  <h2>Build order</h2>
+  <p>Do the bench before any hole in the bumper. A bad 5&nbsp;V buck is cheap on the bench and expensive after four lidars are wired.</p>
+  <div class="card" style="padding:0">
+    <table>
+      <thead><tr><th>Block</th><th>Hours</th><th>Done when</th></tr></thead>
+      <tbody>
+        <tr><td>Image the Pi, install packages</td><td>1</td><td>Console autologin, I2C on</td></tr>
+        <tr><td>One lidar on the bench, sniffer printing inches</td><td>1.5</td><td>Hand in the beam changes the number</td></tr>
+        <tr><td>Four lidars, labels, config.json</td><td>2</td><td>Each corner moves only its own number</td></tr>
+        <tr><td>Full screen and the IMU on the bench</td><td>2</td><td>A hand in one beam turns that corner amber, then red</td></tr>
+        <tr><td>Four brackets and eyebrows</td><td>3</td><td>Tabs bolted to the bumpers, lenses recessed</td></tr>
+        <tr><td>Fuse, relay, both pods, frame runs</td><td>4</td><td>Meter table passes, key-off kills 12&nbsp;V at the pods</td></tr>
+        <tr><td>Screen bracket, Pi in the dash</td><td>1.5</td><td>Screen readable from the seat, cluster still visible</td></tr>
+        <tr><td>Cardboard walk around all four corners</td><td>1</td><td>Fender, door, and a corner “tree” each trip only their corner</td></tr>
+        <tr><td>First trail with a spotter</td><td>1</td><td>Ten moves where the color matches what the spotter sees</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Weekend one, at the bench</h3>
+  <ol class="steps">
+    <li>Write the SD card. Boot. Install the three packages. Enable I2C. Add the groups.</li>
+    <li>Set one pod buck on a current-limited 12&nbsp;V supply. Confirm 5.0–5.2&nbsp;V with the meter on the output screws and nothing else attached. Power one lidar from those screws.</li>
+    <li>Jumper a USB-UART to 3.3&nbsp;V. Connect ground and the sensor’s TX only. Run the sniffer. Then add RX.</li>
+    <li>Repeat until all four dongles have tape labels and <code>config.json</code> has four <code>/dev/serial/by-id/</code> paths.</li>
+    <li>Wire the MPU6050 to the Pi header. Run <code>CRAWL_WINDOW=1 python3 crawl_sense.py</code>. Tilt the Pi and watch the horizon. Walk a hand from a few feet out toward one lens and watch that corner go from green to amber to red.</li>
+    <li>Cover one lens. That corner should go to dashes within a second, and the other three should stay calm.</li>
+  </ol>
+  <h3>Weekend two, on the truck</h3>
+  <ol class="steps">
+    <li>Battery negative off until the 5&nbsp;A holder is crimped and the relay socket is bolted down. Ring terminal on the battery positive, fuse within 12&nbsp;inches, then relay pin 30.</li>
+    <li>Mount the relay low on the driver’s kick area or on the inner fender, socket down so it cannot fill with water. Ground pin 85. Coil from the add-a-circuit.</li>
+    <li>Reconnect the battery. Key on: pin 87 is near 12&nbsp;V. Key off: pin 87 is 0&nbsp;V. Pull the 1&nbsp;A coil fuse and confirm the same drop, so a failure in the cab has a way to kill the system.</li>
+    <li>Run 16&nbsp;AWG to both bumpers in split loom, on the driver frame rail, with a 2&nbsp;A fuse for each run at the cab stud. Drip loops. Glands into the pods. Set both pod bucks to 5.1&nbsp;V before the sensors are plugged.</li>
+    <li>Bolt the brackets on the four bumper corners, yawed about 45° out, lenses at fender or bedside height and recessed behind the steel. Fit the eyebrows. Connect the short pigtails inside the pods and close the lids with a bead of grease on the gasket.</li>
+    <li>Pull the shielded cables with the power loom, shield landed only at the cab. Dongles in, Pi buck set to 5.1&nbsp;V under load, HAT wired per its sheet, screen on the radio-stack bracket.</li>
+    <li>Enable the service. Do the cardboard walk on all four corners: along the fender, along the front of the door, and out from the corner. Loctite the pivots.</li>
+    <li>Key off. The lidars should go dark immediately. The Pi should shut itself down and stay down. If it reboots when the HAT gives up, the shutdown signal is backward. Fix that before the first trail, because a bouncing reboot corrupts the card.</li>
+  </ol>
+  <h3>On the trail</h3>
+  <ol class="steps">
+    <li>Creep the first tight line with a spotter outside. Call the corner the screen paints, and have them confirm the tree or rock is on that panel.</li>
+    <li>If a door skin touches something while every corner stays green, that spot is in the gap between the front and rear beams. Yaw the nearby lens farther along the side, or plan a slider sensor later.</li>
+    <li>If a corner chatters amber on open trail, the beam is clipping the bumper, a flare bolt, or the ground. Raise the pitch toward level, or trim the yaw until the lens sees open air.</li>
+    <li>Before a water crossing that will cover the bumper, unplug the pod connectors. An outdoor face survives rain and a hose. It is a bad submarine. Treat a drowned lidar as a replaceable part.</li>
+    <li>At the trailhead, key off and wait until the Pi’s activity LED is dark before you walk away.</li>
+  </ol>
+  <div class="t-acc" data-open="false">
+    <button class="t-acc-head" aria-expanded="false">When a corner misbehaves
+      <span class="t-acc-chevron"><svg viewBox="0 0 16 16"><path d="M4 6.5L8 10.5L12 6.5"/></svg></span>
+    </button>
+    <div class="t-acc-panel"><div class="t-acc-panel-inner">
+      <ul class="clean">
+        <li>Dashes on one corner: unplug that dongle, check <code>/dev/serial/by-id</code>, and look for 5.1&nbsp;V at that lidar. A dark TX line with good 5&nbsp;V is a broken yellow wire or a swapped pair.</li>
+        <li>A corner that reads HIT with open air beside the truck: the beam is hitting the eyebrow, the bumper wing, or a license-plate bracket. Look down the lens. You should see air beside the panel, not your own steel.</li>
+        <li>Both front corners jump when the winch solenoid clicks: the signal cable is bundled with winch power. Separate them.</li>
+        <li>Ranges freeze while the truck is running and work on battery alone: the buck is letting alternator spikes through, or a ground is on painted metal. Reseat the cab ground stud and confirm 5.1&nbsp;V at the Pi while the engine is at a fast idle.</li>
+        <li>Horizon drifts on flat ground: the IMU is on a panel that moves, or it is tilted in the mount. Shim it until pitch and roll sit near zero on your level slab.</li>
+        <li>The screen is washed out at noon: add a hood of black plastic, about 2&nbsp;inches deep, on the top and both sides. A brighter panel is the other fix, and it is already the high side of the parts table.</li>
+      </ul>
+    </div></div>
+  </div>
+  <h3>What this leaves for later</h3>
+  <p>A pair of sensors on the sliders would cover the middle of the doors, which is the gap these four corners leave. They use the same pod, the same frame, and two more lines in <code>config.json</code>. Build the corners first, learn that gap with a spotter, and add the sliders only if a door skin is what keeps getting touched.</p>
+</section>
+</main>
+<footer class="colophon">
+  Stock sizes are Toyota’s 2000 Tacoma figures for 4×4 regular cab and Xtracab. Parts prices are a late-2026 planning range, not a quote. The display program beside this file is the one the Software and Build sections install.
+</footer>
+<script>
+const bar = document.querySelector(".t-tabs");
+const pill = bar.querySelector(".t-tabs-pill");
+const tabs = [...bar.querySelectorAll(".t-tab")];
+const panels = [...document.querySelectorAll(".panel")];
+
+function moveTo(tab, animate) {
+  if (!animate) {
+    const prev = pill.style.transition;
+    pill.style.transition = "none";
+    pill.style.transform = `translateX(${tab.offsetLeft}px)`;
+    pill.style.width = `${tab.offsetWidth}px`;
+    void pill.offsetWidth;
+    pill.style.transition = prev;
+  } else {
+    pill.style.transform = `translateX(${tab.offsetLeft}px)`;
+    pill.style.width = `${tab.offsetWidth}px`;
+  }
+}
+function showPanel(id) {
+  panels.forEach((panel) => {
+    const on = panel.id === id;
+    panel.hidden = !on;
+  });
+}
+const active = () =>
+  tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
+
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    tabs.forEach((t) =>
+      t.setAttribute("aria-selected", t === tab ? "true" : "false")
+    );
+    moveTo(tab, true);
+    showPanel(tab.dataset.panel);
+    window.scrollTo(0, 0);
+  });
+});
+requestAnimationFrame(() => moveTo(active(), false));
+window.addEventListener("resize", () => moveTo(active(), false));
+
+document.querySelectorAll(".t-acc").forEach((acc) => {
+  const head = acc.querySelector(".t-acc-head");
+  head.addEventListener("click", () => {
+    const open = acc.getAttribute("data-open") === "true";
+    acc.setAttribute("data-open", String(!open));
+    head.setAttribute("aria-expanded", String(!open));
+  });
+});
+
+const yawDeg = document.getElementById("yawDeg");
+const pitchDeg = document.getElementById("pitchDeg");
+const lookIn = document.getElementById("lookIn");
+const aimText = document.getElementById("aimText");
+const aimAdvice = document.getElementById("aimAdvice");
+const aimLabel = document.getElementById("aimLabel");
+const lens = document.getElementById("lens");
+const beam = document.getElementById("beam");
+const hit = document.getElementById("hit");
+
+function drawAim() {
+  const yaw = Number(yawDeg.value);
+  const pitch = Number(pitchDeg.value);
+  const look = Number(lookIn.value);
+  if (!(look > 0) || yaw < 0 || yaw > 90 || pitch < 0 || pitch >= 80) {
+    aimText.textContent = "Enter a yaw, a pitch, and a distance.";
+    return;
+  }
+  const yawR = yaw * Math.PI / 180;
+  const pitchR = pitch * Math.PI / 180;
+  const horiz = look * Math.cos(pitchR);
+  const forward = horiz * Math.cos(yawR);
+  const outward = horiz * Math.sin(yawR);
+  const below = look * Math.sin(pitchR);
+  const originX = 250;
+  const originY = 150;
+  const scale = 2.2;
+  const hitX = Math.max(20, Math.min(620, originX + outward * scale));
+  const hitY = Math.max(36, Math.min(220, originY - forward * scale));
+  beam.setAttribute("x1", originX);
+  beam.setAttribute("y1", originY);
+  beam.setAttribute("x2", hitX);
+  beam.setAttribute("y2", hitY);
+  hit.setAttribute("cx", hitX);
+  hit.setAttribute("cy", hitY);
+  lens.setAttribute("cx", originX);
+  lens.setAttribute("cy", originY);
+  aimLabel.textContent = forward.toFixed(0) + " in forward  ·  " + outward.toFixed(0) + " in outboard  ·  " + below.toFixed(0) + " in below the lens";
+  aimText.textContent = "At " + look.toFixed(0) + " inches along the beam, the strike is " + forward.toFixed(0) + " inches ahead of the corner and " + outward.toFixed(0) + " inches out from the side.";
+  if (pitch > 15) {
+    aimAdvice.textContent = "That pitch is into the dirt. Bring it back toward 5° so the beam stays at the panel.";
+  } else if (yaw < 25) {
+    aimAdvice.textContent = "That yaw looks down the trail. A tree beside the fender is outside the beam. Open it toward 45°.";
+  } else if (yaw > 70) {
+    aimAdvice.textContent = "That yaw looks straight out the side. A tree you nose into at the corner is outside the beam. Close it toward 45°.";
+  } else {
+    aimAdvice.textContent = "That covers the corner and the start of the side panel. Use the cardboard walk to trim the last few degrees.";
+  }
+}
+[yawDeg, pitchDeg, lookIn].forEach((el) => el.addEventListener("input", drawAim));
+drawAim();
+</script>
+</body>
+</html>
